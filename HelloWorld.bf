@@ -22,7 +22,7 @@
     >+                  Add 1 to Cell #3
     >-                  Subtract 1 from Cell #4
     >>+                 Add 1 to Cell #6
-    [<                 Move back to the first zero cell you find; this will
+    [<]                 Move back to the first zero cell you find; this will
                         be Cell #1 which was cleared by the previous loop
     <-                  Decrement the loop Counter in Cell #0
                        ]                       Loop until Cell #0 is zero; number of iterations is 8
