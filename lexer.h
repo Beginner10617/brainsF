@@ -31,5 +31,5 @@ struct tokenTypeList{
 };
 tokenTypeList* createTokenTypeList();
 void append(tokenTypeList* list, tokenType token);
-
+void freeTokenTypeList(tokenTypeList** list);
 #endif

@@ -126,3 +126,16 @@ void append(tokenTypeList* list, tokenType token){
   list->list[list->size] = token;
   list->size++;
 }
+
+void freeTokenTypeList(tokenTypeList** list)
+{
+  if(list && *list){
+    free( (*list)->list );
+    free( *list );
+    *list = NULL;
+    return;
+  }
+  printf(WARNING
+  "Trying to free NULL pointer\n"
+  COLOR_RESET);
+}
