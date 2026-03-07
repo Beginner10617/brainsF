@@ -54,29 +54,37 @@ tokenTypeList* tokenize(lexer* lex){
     push_char(buf, c, 11);
     switch (c) {
       case '<':
-        token = LEFT_SHIFT;
+        token = LEFT_SHIFT; 
+        pos++;
         break;
       case '>':
-        token = RIGHT_SHIFT;
+        token = RIGHT_SHIFT; 
+        pos++;
         break;
       case ',':
-        token = STDIN;
+        token = STDIN; 
+        pos++;
         break;
       case '.':
-        token = STDOUT;
+        token = STDOUT; 
+        pos++;
         break;
       case '+':
-        token = INC;
+        token = INC; 
+        pos++;
         break;
       case '-':
-        token = DEC;
+        token = DEC; 
+        pos++;
         break;
       case '[':
-        nesting++;
+        nesting++; 
+        pos++;
         token = OPEN_PAREN;
         break;
       case ']':
-        nesting--;
+        nesting--; 
+        pos++;
         token = CLOSE_PAREN;
         break;
       case '\n':
@@ -84,7 +92,8 @@ tokenTypeList* tokenize(lexer* lex){
         pos = 1;
         token = NONE;
         break;
-      default:
+      default: 
+        pos++;
         token = NONE;
     }
     if(token == NONE) continue;
@@ -132,7 +141,7 @@ tokenTypeList* createTokenTypeList(){
     COLOR_RESET);
     exit(EXIT_FAILURE);
   }
-  output->size = 1;
+  output->size = 0;
   output->cap = 2;
   output->list = malloc(
     sizeof(tokenType) * output->cap
@@ -153,11 +162,20 @@ void append(tokenTypeList* list, tokenType token){
     COLOR_RESET);
     exit(EXIT_FAILURE);
   }
+  tokenType lastToken = -1;
+  if(list->size > 0) 
+    lastToken = list->list[list->size-1].token;
+  if(lastToken>=0 && lastToken == token
+  && lastToken != OPEN_PAREN
+  && lastToken != CLOSE_PAREN){
+    list->list[list->size-1].occ++;
+    return;
+  }
   if(list->size >= list->cap){
     while(list->size >= list->cap)
       list->cap *= 2;
     list->list = realloc(list->list, 
-    sizeof(tokenType) * list->cap);
+    sizeof(tokenWrapper) * list->cap);
     if(list->list == NULL){
       printf(ERROR
       "Unable to reallocate memory to list\n"
@@ -165,7 +183,10 @@ void append(tokenTypeList* list, tokenType token){
       exit(EXIT_FAILURE);
     }
   }
-  list->list[list->size] = token;
+  tokenWrapper tokenW;
+  tokenW.token = token;
+  tokenW.occ = 1;
+  list->list[list->size] = tokenW;
   list->size++;
 }
 
@@ -182,7 +203,7 @@ void freeTokenTypeList(tokenTypeList** list)
   COLOR_RESET);
 }
 
-tokenType tokenAt(tokenTypeList* list, size_t index){
+tokenWrapper tokenAt(tokenTypeList* list, size_t index){
   if (index >= list->size){
     printf(ERROR
     "Trying to access index %zu on a list of size %zu\n"

@@ -25,13 +25,18 @@ lexer* createLexer(char* filename);
 tokenTypeList* tokenize(lexer* lex);
 void freeLexer(lexer** lexer);
 
+typedef struct {
+  tokenType token;
+  int occ; // occurence
+} tokenWrapper;
+
 struct tokenTypeList{
   size_t size;
   size_t cap;
-  tokenType* list; 
+  tokenWrapper* list; 
 };
 tokenTypeList* createTokenTypeList();
 void append(tokenTypeList* list, tokenType token);
 void freeTokenTypeList(tokenTypeList** list);
-tokenType tokenAt(tokenTypeList* list, size_t index);
+tokenWrapper tokenAt(tokenTypeList* list, size_t index);
 #endif

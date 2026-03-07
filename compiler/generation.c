@@ -95,7 +95,8 @@ void freeGenerator(Generator** generator){
 
 void generateCode(Generator* gen){
   size_t sz = gen->tokens->size;
-  tokenType curr_token;
+  tokenType curr_token; int occ;
+  tokenWrapper curr_wrapper;
 
 
 //
@@ -123,48 +124,51 @@ void generateCode(Generator* gen){
   intStack* stk = createIntStack();
   
   while (gen->curr_index < sz){
-    curr_token = tokenAt(gen->tokens,
+    curr_wrapper = tokenAt(gen->tokens,
                   gen->curr_index);
-    
+    curr_token = curr_wrapper.token;
+    occ = curr_wrapper.occ;
     // generate assembly
-
     if(gen->target == x86_64)
     {
       //assert("Target not implemented" && NULL);
       switch (curr_token) {
         case LEFT_SHIFT:
           fprintf(gen->output,
-          "    sub rbx, 1\n");
+          "    sub rbx, %d\n", occ);
           break;
         case RIGHT_SHIFT:
           fprintf(gen->output,
-          "    add rbx, 1\n");
+          "    add rbx, %d\n", occ);
           break;
         case STDIN:// linux is assumed
           fprintf(gen->output,
           "    mov rax, 1\n" 
           "    mov rdi, 0\n"
           "    mov rsi, rbx\n"
-          "    mov rdx, 1\n"
-          "    syscall\n"
-          );
+          "    mov rdx, 1\n");
+          for(int i=0; i<occ; i++)
+            fprintf(gen->output,
+            "    syscall\n");
+          
           break;
         case STDOUT:// linux is assumed
            fprintf(gen->output,
           "    mov rax, 1\n" 
           "    mov rdi, 1\n"
           "    mov rsi, rbx\n"
-          "    mov rdx, 1\n"
-          "    syscall\n"
-          );
+          "    mov rdx, 1\n");
+          for(int i=0; i<occ; i++)
+            fprintf(gen->output,
+            "    syscall\n");
           break;
         case INC:
           fprintf(gen->output,
-          "    add byte [rbx], 1\n");
+          "    add byte [rbx], %d\n", occ);
           break;
         case DEC:
           fprintf(gen->output,
-          "    sub byte [rbx], 1\n");
+          "    sub byte [rbx], %d\n", occ);
           break;
         case OPEN_PAREN:
           fprintf(gen->output,
