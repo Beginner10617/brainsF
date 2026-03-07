@@ -69,10 +69,10 @@ Compile using a C compiler such as `gcc` or `clang`.
 
 ### Interpreter
 ```bash
-gcc interpreter.c.c -o bfi
+gcc interpreter.c -o bfi
 ```
 ```bash
-clang interpreter.c.c -o bfi
+clang interpreter.c -o bfi
 ```
 ### Compiler
 ```bash
