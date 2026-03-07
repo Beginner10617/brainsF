@@ -1,5 +1,6 @@
 #include "generation.h"
 #include "stdlib.h"
+#include "assert.h"
 #define ERROR "\x1b[31m"
 #define WARNING "\033[33m"
 #define COLOR_RESET "\x1b[0m"
@@ -50,8 +51,29 @@ void generateCode(Generator* gen){
   while (gen->curr_index < sz){
     curr_token = tokenAt(gen->tokens,
                   gen->curr_index);
-    // generate assembly based
-    // on the target
+    
+    // generate assembly
+
+    if(gen->target == x86_64)
+    {
+      //assert("Target not implemented" && NULL);
+      
+
+    }
+    else if(gen->target == x86_32)
+    {
+      assert("Target not implemented" && NULL);
+    }
+    else if(gen->target == arm64)
+    {
+      assert("Target not implemented" && NULL);
+    }
+    else if(gen->target == arm32)
+    {
+      assert("Target not implemented" && NULL);
+    }
+
+
     gen->curr_index++;
   }
   gen->curr_index = 0;

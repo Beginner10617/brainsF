@@ -1,8 +1,24 @@
 #include "lexer.h"
 #include "stdlib.h"
+#include "assert.h"
 #define ERROR "\x1b[31m"
 #define WARNING "\033[33m"
 #define COLOR_RESET "\x1b[0m"
+
+// helper function
+void push_char(char* str, char c, size_t sz){
+  assert(sz > 0 && str);
+  char tmp0 = c; size_t i = sz - 1;
+  char tmp1;
+  while(1){
+    tmp1 = str[i];
+    str[i] = tmp0;
+    tmp0 = tmp1;
+    if(i == 0) break;
+    i--;
+  }
+}
+
 
 lexer* createLexer(char* filename){
   lexer* output = malloc(sizeof(lexer));
@@ -29,10 +45,12 @@ tokenTypeList* tokenize(lexer* lex){
     COLOR_RESET);
     exit(EXIT_FAILURE);
   }
-  char c;
+  char c; int nesting = 0;
   tokenTypeList* output = createTokenTypeList();
+  char buf[12]; buf[11] = '\0';
   while ( (c = fgetc(lex->file)) != EOF){
     tokenType token;
+    push_char(buf, c, 11);
     switch (c) {
       case '<':
         token = LEFT_SHIFT;
@@ -52,10 +70,12 @@ tokenTypeList* tokenize(lexer* lex){
       case '-':
         token = DEC;
         break;
-      case '(':
+      case '[':
+        nesting++;
         token = OPEN_PAREN;
         break;
-      case ')':
+      case ']':
+        nesting--;
         token = CLOSE_PAREN;
         break;
       default:
@@ -63,6 +83,13 @@ tokenTypeList* tokenize(lexer* lex){
     }
     if(token == NONE) continue;
     append(output, token);
+  }
+  if(nesting){
+    printf("%s\n",buf);
+    printf(ERROR 
+    "         ^ Expected a ']' here\n"
+    COLOR_RESET);
+    exit(EXIT_FAILURE);
   }
   return output;
 }
