@@ -32,4 +32,5 @@ struct tokenTypeList{
 tokenTypeList* createTokenTypeList();
 void append(tokenTypeList* list, tokenType token);
 void freeTokenTypeList(tokenTypeList** list);
+tokenType tokenAt(tokenTypeList* list, size_t index);
 #endif

@@ -139,3 +139,13 @@ void freeTokenTypeList(tokenTypeList** list)
   "Trying to free NULL pointer\n"
   COLOR_RESET);
 }
+
+tokenType tokenAt(tokenTypeList* list, size_t index){
+  if (index >= list->size){
+    printf(ERROR
+    "Trying to access index %zu on a list of size %zu\n"
+    COLOR_RESET, index, list->size);
+    exit(EXIT_FAILURE);
+  }
+  return list->list[index];
+}

@@ -45,5 +45,15 @@ void freeGenerator(Generator** generator){
 }
 
 void generateCode(Generator* gen){
-  
+  size_t sz = gen->tokens->size;
+  tokenType curr_token;
+  while (gen->curr_index < sz){
+    curr_token = tokenAt(gen->tokens,
+                  gen->curr_index);
+    // generate assembly based
+    // on the target
+    gen->curr_index++;
+  }
+  gen->curr_index = 0;
+  gen->label_count = 0;
 }

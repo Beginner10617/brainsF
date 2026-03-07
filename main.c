@@ -71,8 +71,7 @@ int main(int argc, char *argv[]){
   tokenTypeList* list = tokenize(lex);
   freeLexer(&lex);
   Generator* gen = createGenerator(list, ofilename, target);
-  
-  
-
+  generateCode(gen);  
+  freeGenerator(&gen);
   return EXIT_SUCCESS;
 }
