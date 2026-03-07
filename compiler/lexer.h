@@ -19,6 +19,7 @@ typedef struct tokenTypeList tokenTypeList;
 typedef struct{
   size_t index;
   FILE *file;
+  char* filename;
 } lexer;
 lexer* createLexer(char* filename);
 tokenTypeList* tokenize(lexer* lex);

@@ -34,6 +34,7 @@ lexer* createLexer(char* filename){
     COLOR_RESET, filename);
     exit(EXIT_FAILURE);
   }
+  output->filename = filename;
   output->index = 0;
   return output;
 }
@@ -45,7 +46,7 @@ tokenTypeList* tokenize(lexer* lex){
     COLOR_RESET);
     exit(EXIT_FAILURE);
   }
-  char c; int nesting = 0;
+  char c; int nesting = 0, line = 1, pos = 1;
   tokenTypeList* output = createTokenTypeList();
   char buf[12]; buf[11] = '\0';
   while ( (c = fgetc(lex->file)) != EOF){
@@ -78,15 +79,21 @@ tokenTypeList* tokenize(lexer* lex){
         nesting--;
         token = CLOSE_PAREN;
         break;
+      case '\n':
+        line++;
+        pos = 1;
+        token = NONE;
+        break;
       default:
         token = NONE;
     }
     if(token == NONE) continue;
     append(output, token);
     if(nesting < 0){
-      printf("%s\n",buf);
+      printf("%s:%d:%d: %s\n",
+      lex->filename, line, pos, buf);
       printf(ERROR 
-      "         ^ Expected a '[' here\n"
+      "Expected a '[' here\n"
       COLOR_RESET);
       exit(EXIT_FAILURE);
     }
