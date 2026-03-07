@@ -19,6 +19,7 @@ Generator* createGenerator(tokenTypeList* tokens, char* filename, Target target)
     exit(EXIT_FAILURE);
   }
   generator->tokens = tokens;
+  generator->label_count = 0;
   generator->curr_index = 0;
   generator->output = fopen(filename, "w");
   if(generator->output == NULL){
@@ -41,4 +42,8 @@ void freeGenerator(Generator** generator){
   printf(WARNING
   "Trying to free NULL pointer\n"
   COLOR_RESET);
+}
+
+void generateCode(Generator* gen){
+  
 }

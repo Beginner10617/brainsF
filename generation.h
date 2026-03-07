@@ -13,6 +13,7 @@ typedef struct {
   tokenTypeList* tokens;
   FILE* output;
   Target target;
+  int label_count;
   size_t curr_index;
 } Generator;
 

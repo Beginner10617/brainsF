@@ -4,6 +4,7 @@
 #include "string.h"
 #define ERROR "\x1b[31m"
 #define WARNING "\033[33m"
+#define GREEN "\033[32m"
 #define COLOR_RESET "\x1b[0m"
 
 typedef enum {
@@ -24,6 +25,11 @@ int main(int argc, char *argv[]){
     } else if (!strcmp(argv[i],"-o")){
       currFlag = outputFlag;
       continue;
+    } else if (!strcmp(argv[i],"--version")){
+      printf(GREEN
+      "BRAINFUCK COMPILER VERSION 1.0\n"
+      COLOR_RESET);
+      return 0;
     }
 
     if(currFlag == inputFlag){
