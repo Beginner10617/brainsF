@@ -83,6 +83,14 @@ tokenTypeList* tokenize(lexer* lex){
     }
     if(token == NONE) continue;
     append(output, token);
+    if(nesting < 0){
+      printf("%s\n",buf);
+      printf(ERROR 
+      "         ^ Expected a '[' here\n"
+      COLOR_RESET);
+      exit(EXIT_FAILURE);
+    }
+
   }
   if(nesting){
     printf("%s\n",buf);
