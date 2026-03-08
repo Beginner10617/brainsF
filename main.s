@@ -2,8 +2,6 @@ global _start
 _start:
     sub rsp, 32768
     mov rbx, rsp
-    add rbx, 9
-    sub rbx, 9
     add byte [rbx], 9
     add rbx, 9
     sub byte [rbx], 9

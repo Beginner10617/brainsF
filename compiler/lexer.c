@@ -162,14 +162,27 @@ void append(tokenTypeList* list, tokenType token){
     COLOR_RESET);
     exit(EXIT_FAILURE);
   }
-  tokenType lastToken = -1;
+  tokenType lastToken = NONE;
   if(list->size > 0) 
     lastToken = list->list[list->size-1].token;
-  if(lastToken>=0 && lastToken == token
-  && lastToken != OPEN_PAREN
-  && lastToken != CLOSE_PAREN){
-    list->list[list->size-1].occ++;
-    return;
+  if(lastToken!=NONE){
+    if(lastToken == token
+    && lastToken != OPEN_PAREN
+    && lastToken != CLOSE_PAREN){
+      list->list[list->size-1].occ++;
+      return;
+    }
+    if((lastToken == LEFT_SHIFT && token == RIGHT_SHIFT)
+    || (lastToken == RIGHT_SHIFT && token == LEFT_SHIFT)
+    || (lastToken == INC && token == DEC)
+    || (lastToken == DEC && token == INC)){
+      list->list[list->size-1].occ--;
+      if( list->list[list->size-1].occ < 0 ){
+        list->list[list->size-1].token = token;
+        list->list[list->size-1].occ *= -1;
+      }
+      return;
+    }
   }
   if(list->size >= list->cap){
     while(list->size >= list->cap)

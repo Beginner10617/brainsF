@@ -134,10 +134,12 @@ void generateCode(Generator* gen){
       //assert("Target not implemented" && NULL);
       switch (curr_token) {
         case LEFT_SHIFT:
+          if(occ == 0) break;
           fprintf(gen->output,
           "    sub rbx, %d\n", occ);
           break;
         case RIGHT_SHIFT:
+          if(occ == 0) break;
           fprintf(gen->output,
           "    add rbx, %d\n", occ);
           break;
@@ -163,10 +165,12 @@ void generateCode(Generator* gen){
             "    syscall\n");
           break;
         case INC:
+          if (occ == 0) break;
           fprintf(gen->output,
           "    add byte [rbx], %d\n", occ);
           break;
         case DEC:
+          if (occ == 0) break;
           fprintf(gen->output,
           "    sub byte [rbx], %d\n", occ);
           break;
