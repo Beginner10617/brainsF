@@ -1,6 +1,7 @@
 #include "generation.h"
 #include "assert.h"
 #include "stdlib.h"
+#include <stdio.h>
 #define ERROR "\x1b[31m"
 #define WARNING "\033[33m"
 #define COLOR_RESET "\x1b[0m"
@@ -95,7 +96,14 @@ void generateCode(Generator *gen) {
   } else if (gen->target == arm64_linux) {
     assert("Target not implemented" && NULL);
   } else if (gen->target == arm64_mac) {
-    assert("Target not implemented" && NULL);
+    fprintf(gen->output, ".extern _write\n"
+                         ".extern _read\n"
+                         ".text\n.globl _main\n_main:\n"
+                         "    stp x29, x30, [sp, #-16]!\n"
+                         "    mov x29, sp\n"
+                         "    sub sp, sp, 32768\n"
+                         "    mov x10, sp\n");
+
   } else if (gen->target == arm32) {
     assert("Target not implemented" && NULL);
   }
@@ -176,12 +184,82 @@ void generateCode(Generator *gen) {
       assert("Target not implemented" && NULL);
     } else if (gen->target == arm64_linux) {
       assert("Target not implemented" && NULL);
-    } else if (gen->target == arm64_mac) {
-      assert("Target not implemented" && NULL);
+    } else if (gen->target == arm64_mac || gen->target == arm64_linux) {
+
+      // assert("Target not implemented" && NULL);
+      switch (curr_token) {
+      case LEFT_SHIFT:
+        if (occ == 0)
+          break;
+        fprintf(gen->output, "    sub x10, x10, #%d\n", occ);
+        break;
+      case RIGHT_SHIFT:
+        if (occ == 0)
+          break;
+        fprintf(gen->output, "    add x10, x10, #%d\n", occ);
+        break;
+      case STDIN:
+        fprintf(gen->output, "    mov x0, #0\n"
+                             "    mov x1, x10\n"
+                             "    mov x2, #1\n");
+        for (int i = 0; i < occ; i++) {
+          if (gen->target == arm64_mac)
+            fprintf(gen->output, "    bl _read\n");
+          else
+            fprintf(gen->output, "    bl read\n");
+        }
+        break;
+      case STDOUT:
+        fprintf(gen->output, "    mov x0, #1\n"
+                             "    mov x1, x10\n"
+                             "    mov x2, #1\n");
+        for (int i = 0; i < occ; i++) {
+          if (gen->target == arm64_mac)
+            fprintf(gen->output, "    bl _write\n");
+          else
+            fprintf(gen->output, "    bl write\n");
+        }
+        break;
+      case INC:
+        if (occ == 0)
+          break;
+        fprintf(gen->output, "    ldrb w0, [x10]\n");
+        fprintf(gen->output, "    add w0, w0, #%d\n", occ);
+        fprintf(gen->output, "    strb w0, [x10]\n");
+        break;
+      case DEC:
+        if (occ == 0)
+          break;
+        fprintf(gen->output, "    ldrb w0, [x10]\n");
+        fprintf(gen->output, "    sub w0, w0, #%d\n", occ);
+        fprintf(gen->output, "    strb w0, [x10]\n");
+        break;
+      case OPEN_PAREN:
+        fprintf(gen->output,
+                "    ldrb w0, [x10]\n"
+                "    cmp w0, #0\n"
+                "    b.eq LABEL1%d\n"
+                "LABEL0%d:\n",
+                label_count, label_count);
+        push(stk, label_count);
+        label_count++;
+        break;
+      case CLOSE_PAREN: {
+        int idx = pop(stk);
+        fprintf(gen->output,
+                "    ldrb w0, [x10]\n"
+                "    cmp w0, #0\n"
+                "    b.ne LABEL0%d\n"
+                "LABEL1%d:\n",
+                idx, idx);
+        break;
+      }
+      default:
+        assert("Something went wrong" && NULL);
+      }
     } else if (gen->target == arm32) {
       assert("Target not implemented" && NULL);
     }
-
     gen->curr_index++;
   }
 
@@ -195,7 +273,8 @@ void generateCode(Generator *gen) {
   } else if (gen->target == arm64_linux) {
     assert("Target not implemented" && NULL);
   } else if (gen->target == arm64_mac) {
-    assert("Target not implemented" && NULL);
+    fprintf(gen->output, "    mov x0, #0\n"
+                         "    bl _exit\n");
   } else if (gen->target == arm32) {
     assert("Target not implemented" && NULL);
   }

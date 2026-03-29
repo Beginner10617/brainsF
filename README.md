@@ -3,7 +3,7 @@
 This project contains two implementations for the Brainf*ck programming language:
 
 1. A **Brainf*ck interpreter** written in C.
-2. A **Brainf*ck compiler** written in C that generates **x86-64 assembly**.
+2. A **Brainf*ck compiler** written in C that generates **x86-64 assembly** and **ARM64** (Mach-O format).
 
 The interpreter was originally written earlier, and the compiler was later added as an experiment in code generation and low-level systems programming.
 
@@ -46,11 +46,12 @@ The interpreter is useful for quickly running Brainf*ck programs without generat
 
 ## Compiler
 
-The compiler translates Brainf*ck source code into **x86-64 assembly**.
+The compiler translates Brainf*ck source code into **x86-64 assembly** and **ARM64** (Mach-O format).
 
 ### Characteristics
 
 - Generates assembly targeting **Linux x86-64**
+- Generates assembly targeting **Mach-0 ARM64**
 - Uses **Linux syscalls** for input and output
 - Implements Brainf*ck loops using assembly labels and conditional jumps
 - Uses a memory tape allocated on the stack
@@ -58,11 +59,14 @@ The compiler translates Brainf*ck source code into **x86-64 assembly**.
 ### Input/Output
 
 The generated assembly uses:
-
+In `x86-64`
 - `syscall 0` for `read`
 - `syscall 1` for `write`
-
 Therefore it assumes a **Linux environment**.
+
+In `Mach-O ARM64`
+- `_read` for `read`
+- `_write` for `write`
 
 ## Building
 
@@ -89,17 +93,12 @@ clang main.c generation.c lexer.c -o bfc
 ```
 ### Compiler
 ```bash
-./bfc prog.bf -target x86_64 -o prog.s
+./bfc prog.bf -target [target_name] -o prog.s
 ```
-Then assemble and link:
-```bash
-nasm -f elf64 prog.s
-ld prog.o -o prog
-```
-Run the compiled program:
-```bash
-./prog
-```
+Targets available:
+1. For x86-64, use flag `x86_64`
+2. For ARM64(Mach-o format), use flag `arm64-mac`
+Then assemble LINK, and run the compiled program
 
 # Notes
 - The compiler currently targets only x86-64 Linux.
