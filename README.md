@@ -99,7 +99,7 @@ Targets available:
 1. For x86-64, use flag `x86_64`
 2. For ARM64(Mach-o format), use flag `arm64-mac`
 
-Then assemble LINK, and run the compiled program
+Then assemble link, and run the compiled program
 
 # Notes
 - The compiler currently targets only x86-64 Linux.
