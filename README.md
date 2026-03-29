@@ -100,6 +100,8 @@ Targets available:
 2. For ARM64(Mach-o format), use flag `arm64-mac`
 
 Then assemble link, and run the compiled program
+1. Tested using `nasm + ld` for x86-64
+2. Tested using `clang` for ARM64
 
 # Notes
-- The compiler currently targets only x86-64 Linux.
+- The compiler currently targets x86-64 Linux, and ARM64 Mach-O format
