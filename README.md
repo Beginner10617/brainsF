@@ -11,9 +11,9 @@ The interpreter was originally written earlier, and the compiler was later added
 
 - Brainf*ck interpreter implemented in C
 - Brainf*ck compiler implemented in C
-- Compiler generates **x86-64 assembly**
+- Compiler generates **x86-64 assembly** and **ARM64** (Mach-O format).
 - Simple optimizations dealing command repitions
-- Designed for **Linux systems** using **Linux syscalls** for input and output
+- x86 generation designed for **Linux systems** using **Linux syscalls** for input and output
 
 ## Brainf*ck Overview
 
