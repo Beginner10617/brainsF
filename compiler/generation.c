@@ -210,10 +210,10 @@ void generateCode(Generator *gen) {
         }
         break;
       case STDOUT:
-        fprintf(gen->output, "    mov x0, #1\n"
-                             "    mov x1, x10\n"
-                             "    mov x2, #1\n");
         for (int i = 0; i < occ; i++) {
+          fprintf(gen->output, "    mov x0, #1\n"
+                               "    mov x1, x10\n"
+                               "    mov x2, #1\n");
           if (gen->target == arm64_mac)
             fprintf(gen->output, "    bl _write\n");
           else

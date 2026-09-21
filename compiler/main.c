@@ -49,11 +49,11 @@ int main(int argc, char *argv[]) {
   }
 
   if (ifilename == NULL) {
-    printf(ERROR "No input file provided\n" COLOR_RESET);
+    printf(ERROR "Usage : %s %s -target [target_name] -o <output>\n" COLOR_RESET, argv[0], "<input>");
     exit(EXIT_FAILURE);
   }
   if (target == invalidTarget) {
-    printf(ERROR "Target assembly not provided\n" COLOR_RESET);
+    printf(ERROR "Usage : %s %s -target [target_name] -o <output>\n" COLOR_RESET, argv[0], argv[1]);
     exit(EXIT_FAILURE);
   }
 
