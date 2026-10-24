@@ -59,3 +59,6 @@ dkms.conf
 *.swo
 grammar.md
 *.sh
+
+# Manuals
+*.pdf
